@@ -26,8 +26,8 @@ class SearchScreen extends StatelessWidget {
                   onChange: (value) {
                     NewsCubit.get(context).getSearch(value);
                   },
-                  validate: (String value) {
-                    if (value.isEmpty) {
+                  validator: (String? value) {
+                    if (value!.isEmpty) {
                       return 'search must not be empty';
                     }
                     return null;

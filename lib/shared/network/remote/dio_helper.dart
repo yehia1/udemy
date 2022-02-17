@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 
 class DioHelper
 {
-  static Dio dio;
+  static Dio? dio;
 
   static init() {
     dio = Dio(
@@ -15,11 +15,11 @@ class DioHelper
   }
 
   static Future<Response> getData({
-    @required String url,
-    @required Map<String, dynamic> query,
+    required String url,
+    required Map<String, dynamic> query,
   }) async
   {
-    return await dio.get(
+    return await dio!.get(
       url,
       queryParameters: query,
     );

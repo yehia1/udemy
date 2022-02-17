@@ -1,4 +1,4 @@
-import 'package:conditional_builder/conditional_builder.dart';
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:udemy_flutter/modules/web_view/web_view_screen.dart';
 import 'package:udemy_flutter/shared/cubit/cubit.dart';
@@ -8,8 +8,8 @@ Widget defaultButton({
   Color background = Colors.blue,
   bool isUpperCase = true,
   double radius = 3.0,
-  @required Function function,
-  @required String text,
+  required Function() function,
+  required String text,
 }) =>
     Container(
       width: width,
@@ -32,17 +32,17 @@ Widget defaultButton({
     );
 
 Widget defaultFormField({
-  @required TextEditingController controller,
-  @required TextInputType type,
-  Function onSubmit,
-  Function onChange,
-  Function onTap,
+  required TextEditingController controller,
+  required TextInputType type,
+  Function(String)? onSubmit,
+  Function(String)? onChange,
+  Function()? onTap,
   bool isPassword = false,
-  @required Function validate,
-  @required String label,
-  @required IconData prefix,
-  IconData suffix,
-  Function suffixPressed,
+  FormFieldValidator<String>? validator,
+  required String label,
+  required IconData prefix,
+  IconData? suffix,
+  Function()? suffixPressed,
   bool isClickable = true,
 }) =>
     TextFormField(
@@ -53,7 +53,7 @@ Widget defaultFormField({
       onFieldSubmitted: onSubmit,
       onChanged: onChange,
       onTap: onTap,
-      validator: validate,
+      validator: validator,
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: Icon(
@@ -71,112 +71,112 @@ Widget defaultFormField({
       ),
     );
 
-Widget buildTaskItem(Map model, context) => Dismissible(
-  key: Key(model['id'].toString()),
-  child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Row(
-          children: [
-            CircleAvatar(
-              radius: 40.0,
-              child: Text(
-                '${model['time']}',
-              ),
-            ),
-            SizedBox(
-              width: 20.0,
-            ),
-            Expanded(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${model['title']}',
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    '${model['date']}',
-                    style: TextStyle(
-                      color: Colors.grey,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              width: 20.0,
-            ),
-            IconButton(
-              onPressed: ()
-              {
-                AppCubit.get(context).updateData(
-                  status: 'done',
-                  id: model['id'],
-                );
-              },
-              icon: Icon(
-                Icons.check_box,
-                color: Colors.green,
-              ),
-            ),
-            IconButton(
-              onPressed: () {
-                AppCubit.get(context).updateData(
-                  status: 'archive',
-                  id: model['id'],
-                );
-              },
-              icon: Icon(
-                Icons.archive,
-                color: Colors.black45,
-              ),
-            ),
-          ],
-        ),
-      ),
-  onDismissed: (direction)
-  {
-    AppCubit.get(context).deleteData(id: model['id'],);
-  },
-);
+// Widget buildTaskItem(Map model, context) => Dismissible(
+//   key: Key(model['id'].toString()),
+//   child: Padding(
+//         padding: const EdgeInsets.all(20.0),
+//         child: Row(
+//           children: [
+//             CircleAvatar(
+//               radius: 40.0,
+//               child: Text(
+//                 '${model['time']}',
+//               ),
+//             ),
+//             SizedBox(
+//               width: 20.0,
+//             ),
+//             Expanded(
+//               child: Column(
+//                 mainAxisSize: MainAxisSize.min,
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   Text(
+//                     '${model['title']}',
+//                     style: TextStyle(
+//                       fontSize: 18.0,
+//                       fontWeight: FontWeight.bold,
+//                     ),
+//                   ),
+//                   Text(
+//                     '${model['date']}',
+//                     style: TextStyle(
+//                       color: Colors.grey,
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//             SizedBox(
+//               width: 20.0,
+//             ),
+//             IconButton(
+//               onPressed: ()
+//               {
+//                 AppCubit.get(context).updateData(
+//                   status: 'done',
+//                   id: model['id'],
+//                 );
+//               },
+//               icon: Icon(
+//                 Icons.check_box,
+//                 color: Colors.green,
+//               ),
+//             ),
+//             IconButton(
+//               onPressed: () {
+//                 AppCubit.get(context).updateData(
+//                   status: 'archive',
+//                   id: model['id'],
+//                 );
+//               },
+//               icon: Icon(
+//                 Icons.archive,
+//                 color: Colors.black45,
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//   onDismissed: (direction)
+//   {
+//     AppCubit.get(context).deleteData(id: model['id'],);
+//   },
+// );
 
-Widget tasksBuilder({
-  @required List<Map> tasks,
-}) => ConditionalBuilder(
-  condition: tasks.length > 0,
-  builder: (context) => ListView.separated(
-    itemBuilder: (context, index)
-    {
-      return buildTaskItem(tasks[index], context);
-    },
-    separatorBuilder: (context, index) => myDivider(),
-    itemCount: tasks.length,
-  ),
-  fallback: (context) => Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          Icons.menu,
-          size: 100.0,
-          color: Colors.grey,
-        ),
-        Text(
-          'No Tasks Yet, Please Add Some Tasks',
-          style: TextStyle(
-            fontSize: 16.0,
-            fontWeight: FontWeight.bold,
-            color: Colors.grey,
-          ),
-        ),
-      ],
-    ),
-  ),
-);
+// Widget tasksBuilder({
+//   required List<Map> tasks,
+// }) => ConditionalBuilder(
+//   condition: tasks.length > 0,
+//   builder: (context) => ListView.separated(
+//     itemBuilder: (context, index)
+//     {
+//       return buildTaskItem(tasks[index], context);
+//     },
+//     separatorBuilder: (context, index) => myDivider(),
+//     itemCount: tasks.length,
+//   ),
+//   fallback: (context) => Center(
+//     child: Column(
+//       mainAxisAlignment: MainAxisAlignment.center,
+//       children: [
+//         Icon(
+//           Icons.menu,
+//           size: 100.0,
+//           color: Colors.grey,
+//         ),
+//         Text(
+//           'No Tasks Yet, Please Add Some Tasks',
+//           style: TextStyle(
+//             fontSize: 16.0,
+//             fontWeight: FontWeight.bold,
+//             color: Colors.grey,
+//           ),
+//         ),
+//       ],
+//     ),
+//   ),
+// );
 
 Widget myDivider() => Padding(
   padding: const EdgeInsetsDirectional.only(

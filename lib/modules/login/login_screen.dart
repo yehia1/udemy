@@ -51,9 +51,9 @@ class _LoginScreenState extends State<LoginScreen>
                     label: 'Email',
                     prefix: Icons.email,
                     type: TextInputType.emailAddress,
-                    validate: (String value)
+                    validator: (String? value)
                     {
-                      if(value.isEmpty)
+                      if(value!.isEmpty)
                       {
                         return 'email must not be empty';
                       }
@@ -78,9 +78,9 @@ class _LoginScreenState extends State<LoginScreen>
                       });
                     },
                     type: TextInputType.visiblePassword,
-                    validate: (String value)
+                    validator: (String? value)
                     {
-                      if(value.isEmpty)
+                      if(value!.isEmpty)
                       {
                         return 'password is too short';
                       }
@@ -95,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen>
                     text: 'login',
                     function: ()
                     {
-                      if(formKey.currentState.validate())
+                      if(formKey.currentState!.validate())
                       {
                         print(emailController.text);
                         print(passwordController.text);

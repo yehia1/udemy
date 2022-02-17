@@ -5,12 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:udemy_flutter/layout/news_app/cubit/cubit.dart';
 import 'package:udemy_flutter/layout/news_app/news_layout.dart';
-import 'package:udemy_flutter/layout/todo_app/todo_layout.dart';
-import 'package:udemy_flutter/modules/bmi/bmi_screen.dart';
-import 'package:udemy_flutter/modules/counter/counter_screen.dart';
-import 'package:udemy_flutter/modules/login/login_screen.dart';
-import 'package:udemy_flutter/modules/messenger/messenger_screen.dart';
-import 'package:udemy_flutter/modules/users/users_screen.dart';
 import 'package:udemy_flutter/shared/bloc_observer.dart';
 import 'package:udemy_flutter/shared/cubit/cubit.dart';
 import 'package:udemy_flutter/shared/cubit/states.dart';
@@ -25,9 +19,9 @@ void main() async {
   DioHelper.init();
   await CacheHelper.init();
 
-  bool isDark = CacheHelper.getBoolean(key: 'isDark');
+  bool? isDark = CacheHelper.getBoolean(key: 'isDark') ?? false;
 
-  runApp(MyApp(isDark));
+  runApp(MyApp(isDark!));
 }
 
 // Stateless
