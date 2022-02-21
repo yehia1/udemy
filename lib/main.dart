@@ -1,40 +1,68 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:udemy_flutter/layout/Shop_app/Shop_layout.dart';
 import 'package:udemy_flutter/layout/news_app/cubit/cubit.dart';
 import 'package:udemy_flutter/layout/news_app/news_layout.dart';
+import 'package:udemy_flutter/modules/Basics/login/login_screen.dart';
+import 'package:udemy_flutter/modules/Shop_app/Login/Shop_login_screen.dart';
+import 'package:udemy_flutter/modules/Shop_app/On_boarding_screen/on_boarding_screen.dart';
 import 'package:udemy_flutter/shared/bloc_observer.dart';
 import 'package:udemy_flutter/shared/cubit/cubit.dart';
 import 'package:udemy_flutter/shared/cubit/states.dart';
+import 'package:udemy_flutter/shared/network/local/Constants.dart';
 import 'package:udemy_flutter/shared/network/local/cache_helper.dart';
 import 'package:udemy_flutter/shared/network/remote/dio_helper.dart';
+import 'package:udemy_flutter/shared/styles/Themes.dart';
+
+import 'layout/Shop_app/Shop_Cubit/ShopCubit.dart';
 
 void main() async {
   // بيتأكد ان كل حاجه هنا في الميثود خلصت و بعدين يتفح الابلكيشن
   WidgetsFlutterBinding.ensureInitialized();
 
+  HttpOverrides.global = MyHttpOverrides();
   Bloc.observer = MyBlocObserver();
   DioHelper.init();
   await CacheHelper.init();
 
-  bool? isDark = CacheHelper.getBoolean(key: 'isDark') ?? false;
+  bool isDark = CacheHelper.getData(key: 'isDark') ?? false;
 
-  runApp(MyApp(isDark!));
+  Widget widget;
+  
+  bool? onboarding = CacheHelper.getData(key:'onBoarding')?? false;
+  token = CacheHelper.getData(key: 'token');
+
+  if(onboarding != null){
+    if(token!= null){
+      widget = ShopLayout();
+    }
+    else{
+      widget = ShopLoginScreen();
+    }
+  }else{
+    widget = OnBoardingScreen();
+  }
+
+  runApp(MyApp(isDark :isDark,StartWidget: widget,));
 }
 
 // Stateless
 // Stateful
 
-// class MyApp
+// class MyApps
 
 class MyApp extends StatelessWidget {
   // constructor
   // build
-  final bool isDark;
+   bool? isDark;
+   Widget? StartWidget;
 
-  MyApp(this.isDark);
+  MyApp({this.isDark, this.StartWidget});
 
   @override
   Widget build(BuildContext context) {
@@ -53,96 +81,32 @@ class MyApp extends StatelessWidget {
               fromShared: isDark,
             ),
         ),
+        BlocProvider(
+            create : (BuildContext context) => ShopCubit()..GetHomeData()..GetCategories())
       ],
       child: BlocConsumer<AppCubit, AppStates>(
         listener: (context, state) {},
         builder: (context, state) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              primarySwatch: Colors.deepOrange,
-              scaffoldBackgroundColor: Colors.white,
-              appBarTheme: AppBarTheme(
-                titleSpacing: 20.0,
-                backwardsCompatibility: false,
-                systemOverlayStyle: SystemUiOverlayStyle(
-                  statusBarColor: Colors.white,
-                  statusBarIconBrightness: Brightness.dark,
-                ),
-                backgroundColor: Colors.white,
-                elevation: 0.0,
-                titleTextStyle: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                ),
-                iconTheme: IconThemeData(
-                  color: Colors.black,
-                ),
-              ),
-              floatingActionButtonTheme: FloatingActionButtonThemeData(
-                backgroundColor: Colors.deepOrange,
-              ),
-              bottomNavigationBarTheme: BottomNavigationBarThemeData(
-                type: BottomNavigationBarType.fixed,
-                selectedItemColor: Colors.deepOrange,
-                unselectedItemColor: Colors.grey,
-                elevation: 20.0,
-                backgroundColor: Colors.white,
-              ),
-              textTheme: TextTheme(
-                bodyText1: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-            darkTheme: ThemeData(
-              primarySwatch: Colors.deepOrange,
-              scaffoldBackgroundColor: HexColor('333739'),
-              appBarTheme: AppBarTheme(
-                titleSpacing: 20.0,
-                backwardsCompatibility: false,
-                systemOverlayStyle: SystemUiOverlayStyle(
-                  statusBarColor: HexColor('333739'),
-                  statusBarIconBrightness: Brightness.light,
-                ),
-                backgroundColor: HexColor('333739'),
-                elevation: 0.0,
-                titleTextStyle: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                ),
-                iconTheme: IconThemeData(
-                  color: Colors.white,
-                ),
-              ),
-              floatingActionButtonTheme: FloatingActionButtonThemeData(
-                backgroundColor: Colors.deepOrange,
-              ),
-              bottomNavigationBarTheme: BottomNavigationBarThemeData(
-                type: BottomNavigationBarType.fixed,
-                selectedItemColor: Colors.deepOrange,
-                unselectedItemColor: Colors.grey,
-                elevation: 20.0,
-                backgroundColor: HexColor('333739'),
-              ),
-              textTheme: TextTheme(
-                bodyText1: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ),
-            ),
+            theme: lightTheme,
+            darkTheme: darkTheme,
             themeMode:
                 AppCubit.get(context).isDark ? ThemeMode.dark : ThemeMode.light,
-            home: NewsLayout(),
+            home: StartWidget,
           );
         },
       ),
     );
+  }
+}
+
+
+//to handle dio post error
+class MyHttpOverrides extends HttpOverrides{
+  @override
+  HttpClient createHttpClient(SecurityContext? context){
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
   }
 }

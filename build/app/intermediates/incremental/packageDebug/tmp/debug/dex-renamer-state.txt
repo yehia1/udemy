@@ -1,0 +1,4 @@
+#Mon Feb 21 06:14:36 EET 2022
+base.0=D\:\\Python\\Flutter\\Full flutter introduction\\New shop app\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
+path.0=classes.dex
+renamed.0=classes.dex

@@ -38,6 +38,10 @@ dependencies:
   shared_preferences: ^2.0.5
   conditional_builder_null_safety: ^0.0.6
   hexcolor: ^2.0.3
+  smooth_page_indicator: ^1.0.0+2
+  motion_toast: ^2.1.1
+  fluttertoast: ^8.0.8
+  carousel_slider: ^4.0.0
 
 
 dev_dependencies:
@@ -72,7 +76,10 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
+  fonts:
+    - family: Jannah
+      fonts:
+          - asset: assets/Fonts/jannah.ttf
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf
