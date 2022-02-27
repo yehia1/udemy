@@ -92,7 +92,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   void submit(){
     CacheHelper.saveData(key: 'onBoarding', value: true).then((value){
       if(value){
-        navigateToStart(context, ShopLoginScreen());
+        navigateToAndDestroy(context, ShopLoginScreen());
       }
     });
   }

@@ -2,13 +2,9 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:udemy_flutter/layout/Shop_app/Shop_layout.dart';
 import 'package:udemy_flutter/layout/news_app/cubit/cubit.dart';
-import 'package:udemy_flutter/layout/news_app/news_layout.dart';
-import 'package:udemy_flutter/modules/Basics/login/login_screen.dart';
 import 'package:udemy_flutter/modules/Shop_app/Login/Shop_login_screen.dart';
 import 'package:udemy_flutter/modules/Shop_app/On_boarding_screen/on_boarding_screen.dart';
 import 'package:udemy_flutter/shared/bloc_observer.dart';
@@ -30,14 +26,17 @@ void main() async {
   DioHelper.init();
   await CacheHelper.init();
 
-  bool isDark = CacheHelper.getData(key: 'isDark') ?? false;
+  late bool? isDark = CacheHelper.getData(key: 'isDark');
 
   Widget widget;
   
-  bool? onboarding = CacheHelper.getData(key:'onBoarding')?? false;
-  token = CacheHelper.getData(key: 'token');
+  late bool? onBoarding = CacheHelper.getData(key:'onBoarding');
 
-  if(onboarding != null){
+
+  token = CacheHelper.getData(key: 'token');
+  print(token);
+
+  if(onBoarding != null){
     if(token!= null){
       widget = ShopLayout();
     }
@@ -82,7 +81,7 @@ class MyApp extends StatelessWidget {
             ),
         ),
         BlocProvider(
-            create : (BuildContext context) => ShopCubit()..GetHomeData()..GetCategories())
+            create : (BuildContext context) => ShopCubit()..GetHomeData()..GetCategories()..Getfavorites()..GetUserData())
       ],
       child: BlocConsumer<AppCubit, AppStates>(
         listener: (context, state) {},
@@ -91,8 +90,8 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             theme: lightTheme,
             darkTheme: darkTheme,
-            themeMode:
-                AppCubit.get(context).isDark ? ThemeMode.dark : ThemeMode.light,
+            themeMode:ThemeMode.light,
+                // AppCubit.get(context).isDark ? ThemeMode.dark : ThemeMode.light,
             home: StartWidget,
           );
         },

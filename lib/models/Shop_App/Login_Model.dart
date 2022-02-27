@@ -4,7 +4,7 @@ class ShopLoginModel{
   String? message;
   UserData? data;
 
-  ShopLoginModel.fromJson({required Map<String,dynamic> map}){
+  ShopLoginModel.fromJson(Map<String,dynamic> map){
     status = map['status'];
     message = map['message'];
     data = map['data']!= null ? UserData.fromJson(map['data']) : null;
@@ -18,6 +18,7 @@ class UserData {
   String? Image;
   int? points;
   int? credits;
+  String? name;
   String? token;
 
   UserData.fromJson(Map<String, dynamic> json){
@@ -28,5 +29,6 @@ class UserData {
     points = json['points'];
     credits = json['credits'];
     token = json['token'];
+    name = json['name'];
   }
 }

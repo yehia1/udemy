@@ -2,13 +2,13 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:motion_toast/motion_toast.dart';
+import 'package:udemy_flutter/layout/Shop_app/Shop_Cubit/ShopCubit.dart';
 import 'package:udemy_flutter/layout/Shop_app/Shop_layout.dart';
 import 'package:udemy_flutter/modules/Shop_app/Login/Cubit/Cubit.dart';
 import 'package:udemy_flutter/modules/Shop_app/Login/Cubit/states.dart';
 import 'package:udemy_flutter/modules/Shop_app/Register/Shop_register_screen.dart';
 import 'package:udemy_flutter/shared/components/components.dart';
+import 'package:udemy_flutter/shared/network/local/Constants.dart';
 import 'package:udemy_flutter/shared/network/local/cache_helper.dart';
 
 class ShopLoginScreen extends StatelessWidget {
@@ -23,12 +23,16 @@ class ShopLoginScreen extends StatelessWidget {
       create: (BuildContext context) =>ShopLoginCubit(),
       child: BlocConsumer<ShopLoginCubit,ShopLoginStates>(
         listener: (context,state){
+          print(token);
           if (state is ShopLoginSuccess){
             if(state.shopLoginModel.status == true){
               print(state.shopLoginModel.data!.token);
               print(state.shopLoginModel.message);
-              CacheHelper.saveData(key: 'token', value: state.shopLoginModel.data!.token).then((value) =>
-                  navigateToStart(context, ShopLayout()));
+              CacheHelper.saveData(key: 'token', value: state.shopLoginModel.data!.token).then((value) {
+                token = state.shopLoginModel.data!.token!;
+                ShopCubit.get(context).currentIndex = 0;
+                navigateToAndDestroy(context, ShopLayout());
+              });
             }else {
               print(state.shopLoginModel.message);
               ShowToast(msg: state.shopLoginModel.message.toString(), state: ToastStates.ERROR);

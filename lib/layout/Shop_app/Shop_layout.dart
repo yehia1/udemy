@@ -43,7 +43,7 @@ class ShopLayout extends StatelessWidget {
     return defaultTextButton(text: 'Sign out', function: (){
       CacheHelper.RemoveData(key: 'token').then((value){
         if(value = true){
-          navigateToStart(context, ShopLoginScreen());
+          navigateToAndDestroy(context, ShopLoginScreen());
         }
       });
     });

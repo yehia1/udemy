@@ -2,7 +2,6 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:udemy_flutter/modules/News_app/web_view/web_view_screen.dart';
-import 'package:udemy_flutter/shared/cubit/cubit.dart';
 import 'package:udemy_flutter/shared/styles/colors.dart';
 
 Widget defaultButton({
@@ -49,6 +48,8 @@ Widget defaultFormField({
   IconData? suffix,
   Function()? suffixPressed,
   bool isClickable = true,
+  TextStyle? labelStyle,
+  OutlineInputBorder? border,
 }) =>
     TextFormField(
       controller: controller,
@@ -269,7 +270,7 @@ void navigateTo(context, widget) => Navigator.push(
   ),
 );
 
-void navigateToStart(context, Widget widget) => Navigator.pushAndRemoveUntil(
+void navigateToAndDestroy(context, Widget widget) => Navigator.pushAndRemoveUntil(
     context,
     MaterialPageRoute(builder: (context)=>widget),
         (route) => false);
